@@ -1,0 +1,86 @@
+<!-- <div class="layout">
+  <main class="page">
+
+    <header class="topbar">
+      <h1 class="page-title">Cargar data</h1>
+
+      <div class="user-mini">
+        <img
+          alt="Avatar de usuario"
+          class="user-mini__avatar"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK"
+        />
+        <span class="user-mini__name">
+          {{ usuario.nameUsuario }}
+        </span>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <section class="upload-header">
+        <p class="upload-header__text">
+          ¿Tienes dudas de cómo subir el archivo?
+        </p>
+        <button mat-flat-button color="accent" class="upload-header__btn"
+                (click)="descargarPlantilla()">
+          <mat-icon>download</mat-icon>
+          Descargar plantilla
+        </button>
+      </section>
+
+      <mat-card class="upload-card mat-elevation-z8">
+        <mat-card-content>
+
+          <div class="upload-dropzone"
+               (dragover)="$event.preventDefault()"
+               (drop)="onFileDrop($event)">
+            <div class="upload-dropzone__inner">
+              <mat-icon class="upload-dropzone__icon">cloud_upload</mat-icon>
+
+              <p class="upload-dropzone__title">
+                {{ selectedFile?.name || 'Subir archivo' }}
+              </p>
+
+              <p class="upload-dropzone__subtitle">
+                Formato aceptado .xlsx o .csv
+              </p>
+
+              <input
+                #fileInput
+                type="file"
+                class="upload-dropzone__input"
+                (change)="onFileSelected($event)"
+                accept=".xlsx,.xls,.csv"
+              />
+
+              <button mat-stroked-button color="primary"
+                      class="upload-dropzone__choose-btn"
+                      type="button"
+                      (click)="fileInput.click()">
+                Elegir archivo
+              </button>
+            </div>
+          </div>
+
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button
+            mat-raised-button
+            color="primary"
+            class="upload-card__submit-btn"
+            type="button"
+            (click)="onUpload()"
+            [disabled]="!selectedFile"
+          >
+            Cargar archivo
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+    </div>
+
+  </main>
+</div>
+ -->

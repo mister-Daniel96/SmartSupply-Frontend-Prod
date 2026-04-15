@@ -1,0 +1,29 @@
+<!-- <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar style="display: flex; justify-content: center; color: whitesmoke;">Menu</mat-toolbar>
+
+        <mat-nav-list class="nav-list">
+            <button *ngFor="let boton of botones" class="btnMenu"
+                [routerLink]="['/components/administrador', id, boton.ruta]" routerLinkActive="active"
+                [ngClass]="{'active': isLinkActive(boton.ruta)}" (click)="toggleSidenav()">
+                <i [class]="boton.icon"></i>
+                <span class="btn-text">{{ boton.texto }}</span>
+            </button>
+            <button class="btnMenu" routerLink="/login" (click)="cerrar()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="btn-text">Cerrar sesion</span>
+            </button>
+
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar style="background-color: transparent;color: rgba(245, 245, 245, 0.74); height: 10px;">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+                *ngIf="isHandset$ | async">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container> -->

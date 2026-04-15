@@ -1,0 +1,153 @@
+<!-- <div class="app">
+    <main class="content">
+        <header class="topbar">
+            <h1 class="page-title"></h1>
+            <div class="user-mini">
+                <img alt="Avatar de usuario" class="user-mini__avatar"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
+                <span class="user-mini__name">
+                    {{ usuario.nameUsuario }}
+                </span>
+            </div>
+
+        </header>
+
+        <div class="page-title">
+            <h1>Predice los artículos</h1>
+        </div>
+
+        <div class="filter-bar">
+            <form [formGroup]="form" class="form" (ngSubmit)="generarPrediccion()">
+
+                <button class="btn-primary" type="submit" [disabled]="form.invalid || isCargando">
+                    Predecir
+                </button>
+
+                <div class="field-inline">
+                    <label for="tipoArticulo">Tipo de artículo</label>
+                    <mat-form-field class="example-full-width">
+                        <mat-select formControlName="nombreArticulo">
+                            <mat-option *ngFor="let p of listaArticulos" [value]="p.value">
+                                {{ p.viewValue }}
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="form.get('nombreArticulo')?.hasError('required')">
+                            El tipo de artículo es obligatorio
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha inicio</mat-label>
+                    <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" [min]="limiteInicio" />
+
+                    <mat-datepicker #pickerInicio></mat-datepicker>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+
+                    <mat-error *ngIf="fechaInicio?.hasError('matDatepickerMin')">
+                        La fecha debe ser mayor a hoy
+                    </mat-error>
+                    <mat-error *ngIf="fechaInicio?.hasError('required')">
+                        La fecha de inicio es obligatoria
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha fin</mat-label>
+                    <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" [min]="limiteInicio" />
+
+                    <mat-datepicker #pickerFin></mat-datepicker>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+
+                    <mat-error *ngIf="fechaFin?.hasError('matDatepickerMin')">
+                        La fecha debe ser mayor a hoy
+                    </mat-error>
+                    <mat-error *ngIf="fechaFin?.hasError('required')">
+                        La fecha de fin es obligatoria
+                    </mat-error>
+                    <mat-error *ngIf="form.hasError('dateRangeInvalid')">
+                        La fecha fin debe ser mayor o igual que la fecha inicio
+                    </mat-error>
+                </mat-form-field>
+
+            </form>
+
+        </div>
+
+        <div class="card">
+            <div class="profile">
+                <h1 class="titulo_prediccion">Predicción de la demanda</h1>
+
+                <div class="cargando" *ngIf="isCargando">
+                    <div class="loading-container">
+                        <div class="lds-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <p class="loading-text">Calculando predicción...</p>
+                    </div>
+                </div>
+                <div class="container_padre">
+                    <div class="container_graficos" *ngIf="predicciones.length">
+                        <div class="prediction-card">
+                            <div class="prediction-card__chart">
+                                <canvas baseChart [data]="lineData" [options]="lineOptions" [type]="'line'">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="predicciones_tablas">
+                        <ng-container *ngIf="predicciones.length; else sinPredicciones">
+
+                            <div class="predicciones-acciones">
+                                <button mat-flat-button  class="upload-header__btn" type="button"
+                                    (click)="exportarPredicciones()">
+                                    <mat-icon>download</mat-icon>
+                                    Descargar prediccion
+                                </button>
+                            </div>
+
+                            <table class="tabla-predicciones">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo de artículo</th>
+                                        <th>Demanda pronosticada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of predicciones">
+                                        <td>{{ p.fecha | date: 'dd/MM/yyyy' }}</td>
+                                        <td>{{ p.tipo_articulo_nombre }}</td>
+                                        <td>{{ p.demanda_pronosticada | number: '1.0-2' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+
+                        <ng-template #sinPredicciones>
+                            <p class="mensaje-sin-datos">
+                                Aún no has generado ninguna predicción. Completa el formulario y presiona
+                                <strong>Predecir</strong>.
+                            </p>
+                        </ng-template>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div> -->

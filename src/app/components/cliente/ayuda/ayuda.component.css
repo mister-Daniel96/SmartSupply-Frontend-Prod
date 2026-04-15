@@ -1,0 +1,147 @@
+
+.app-body {
+  background: #f3f4f6;
+  color: #111827;
+  min-height: 100vh;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.page {
+  flex: 1;
+  padding: 2.5rem;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  border-bottom: #82889e 0.2px solid;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.user-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-mini__avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.user-mini__name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.card {
+  padding: 5px;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.05);
+}
+
+.card-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+
+.profile__avatar-wrap {
+  position: relative;
+}
+
+.profile__avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.profile__name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.profile__email {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+
+.faq-title {
+  font-weight: bold;
+font-size: 1.6rem;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1.5rem;
+  }
+
+  .profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .security-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+mat-expansion-panel.mat-expanded {
+  background-color: #d3d3d352;
+  transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.btnDescargar {
+  display: block;
+  border: none;
+  padding: 10px 20px;
+  background-color: rgb(69, 126, 69);
+  color: whitesmoke;
+  border-radius: 10px;
+  cursor: pointer;
+  margin:  20px 20px ;
+  margin-left: auto;
+}
+.btnDescargar:hover {
+    background-color: rgb(49, 90, 49);
+
+}

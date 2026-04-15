@@ -1,0 +1,135 @@
+
+.app-body {
+  background: #f3f4f6;
+  color: #111827;
+  min-height: 100vh;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+
+.page {
+  flex: 1;
+  padding: 2.5rem;
+}
+
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: #82889e 0.2px solid;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+
+.user-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-mini__avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.user-mini__name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+
+.card {
+  padding: 5px;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.05);
+}
+
+.card-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+
+.profile__avatar-wrap {
+  position: relative;
+}
+
+.profile__avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.profile__name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.support-title {
+  padding: 10px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1px;
+  text-align: center;
+}
+
+.support-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+.table-wrapper {
+  padding: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;  
+  font-size: 0.95rem;
+}
+
+.history-table th,
+.history-table td {
+  padding: 0.5rem 1.5rem; 
+  text-align: left;
+  white-space: nowrap;    
+}
+
+.history-table th {
+  font-weight: 600;
+}
+
+.history-table tbody tr + tr {
+  border-top: 1px solid #eee;
+}

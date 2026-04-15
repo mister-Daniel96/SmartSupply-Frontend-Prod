@@ -1,0 +1,65 @@
+<!-- <div class="app">
+  <main class="content">
+    <header class="topbar">
+      <h1 class="page-title"></h1>
+      <div class="user-mini">
+        <img alt="Avatar de usuario" class="user-mini__avatar"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
+        <span class="user-mini__name">
+          {{ usuario.nameUsuario }}
+        </span>
+      </div>
+
+    </header>
+
+    <div class="page-title">
+      <h1>¿Qué haremos hoy?</h1>
+      <p class="page-subtitle">
+        Vista general de la demanda pronosticada por tipo de artículo para la próxima semana.
+      </p>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">Demanda pronosticada por tipo de artículo</h2>
+        <span class="card-range" *ngIf="rangoTexto">{{ rangoTexto }}</span>
+      </div>
+
+      <div class="loader-wrapper" *ngIf="isCargando">
+        <div class="lds-spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p class="loader-text">Calculando predicciones de la próxima semana...</p>
+      </div>
+
+      <div class="charts-grid" *ngIf="!isCargando && graficosDashboard.length; else sinDatos">
+        <article class="prediction-card" *ngFor="let graf of graficosDashboard">
+          <h3 class="prediction-card__title">{{ graf.nombreArticulo }}</h3>
+          <p class="prediction-card__subtitle">Demanda pronosticada (7 días)</p>
+
+          <div class="prediction-card__chart">
+            <canvas baseChart [data]="graf.data" [options]="graf.options" [type]="'line'">
+            </canvas>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #sinDatos>
+        <p class="mensaje-sin-datos" *ngIf="!isCargando">
+          No se encontraron datos de predicción para los tipos de artículo.
+        </p>
+      </ng-template>
+    </section>
+  </main>
+</div> -->

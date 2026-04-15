@@ -1,0 +1,98 @@
+<!-- <body class="app-body">
+    <div class="layout">
+        <main class="page">
+
+            <header class="topbar">
+                <h1 class="page-title">Gestion de usuario</h1>
+
+                <div class="user-mini">
+                    <img alt="Avatar de usuario" class="user-mini__avatar"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
+                    <span class="user-mini__name">
+                          {{ usuario.nameUsuario }}
+                    </span>
+                </div>
+            </header>
+
+
+            <div class="mat-elevation-z8 container">
+                <div class="toolbar-usuarios">
+                    <button mat-raised-button class="btnCrear" (click)="abrirDialogoNuevo()">
+                        Agregar <i class="fa-solid fa-user-plus" style="color: #ffffff;"></i>
+                    </button>
+                </div>
+
+
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef> Código </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.idUsuario }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.nameUsuario }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="correo">
+                        <th mat-header-cell *matHeaderCellDef> Correo </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.emailUsuario }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="rol">
+                        <th mat-header-cell *matHeaderCellDef> Rol </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.rolUsuario }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contrasena">
+                        <th mat-header-cell *matHeaderCellDef> Contraseña </th>
+                        <td mat-cell *matCellDef="let element" class="contra">
+                        
+                            <i class="fa-solid fa-lock" style="color: #61718f;"></i>
+                            <i class="fa-solid fa-lock" style="color: #61718f;"></i>
+                            <i class="fa-solid fa-lock" style="color: #61718f;"></i>
+                            <i class="fa-solid fa-lock" style="color: #61718f;"></i>
+
+                        </td>
+                    </ng-container>
+
+                   
+                    <ng-container matColumnDef="activado">
+                        <th mat-header-cell *matHeaderCellDef> Activado </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            <i *ngIf="element.enabledUsuario" class="fa-solid fa-circle" style="color: #09B818;"></i>
+                            <i *ngIf="!element.enabledUsuario" class="fa-solid fa-circle" style="color: #EA080B;"></i>
+                        </td>
+                    </ng-container>
+
+                   
+                    <ng-container matColumnDef="accion01">
+                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-raised-button color="primary" (click)="abrirDialogoEditar(element)">
+                                <i class="fa-solid fa-pen-to-square" style="color: #ffffff;"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+
+                <mat-paginator #paginatorClient class="paginator" [pageSizeOptions]="[5]" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+
+
+        </main>
+    </div>
+</body> -->

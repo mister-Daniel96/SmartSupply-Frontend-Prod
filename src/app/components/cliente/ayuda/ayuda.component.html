@@ -1,0 +1,52 @@
+<!-- <body class="app-body">
+    <div class="layout">
+        <main class="page">
+            <header class="topbar">
+                <h1 class="page-title">Ayuda</h1>
+                <div class="user-mini">
+                    <img alt="Avatar de usuario" class="user-mini__avatar"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
+                    <span class="user-mini__name">
+                        {{ usuario.nameUsuario }}
+                    </span>
+                </div>
+
+            </header>
+
+            <div class="card">
+                <button class="btnDescargar" (click)="descargarGuia()">
+                    <i class="fa-solid fa-download"></i> Descargar guía técnica
+                </button>
+                <div class="card-inner">
+                  
+                    <div class="profile">
+                        <h3 class="faq-title">Preguntas Frecuentes</h3>
+
+                        <mat-accordion>
+
+                            @for (faq of faqs; track faq.idFaq) {
+                            <mat-expansion-panel>
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{ faq.preguntaFaq }}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <p>{{ faq.respuestaFaq }}</p>
+
+                                <mat-divider></mat-divider>
+                            </mat-expansion-panel>
+                            }
+
+                            @empty {
+                            <p>Aún no hay preguntas frecuentes cargadas.</p>
+                            }
+
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body> -->

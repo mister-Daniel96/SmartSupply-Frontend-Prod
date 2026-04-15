@@ -1,0 +1,72 @@
+<!-- <body class="app-body">
+    <div class="layout">
+        <main class="page">
+
+            <header class="topbar">
+                <h1 class="page-title">Gestion de soporte</h1>
+
+                <div class="user-mini">
+                    <img alt="Avatar de usuario" class="user-mini__avatar"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
+                    <span class="user-mini__name">
+                          {{ usuario.nameUsuario }}
+                    </span>
+                </div>
+            </header>
+
+
+            <div class="mat-elevation-z8 container">
+
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef> Código </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.idSoporte }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="titulo">
+                        <th mat-header-cell *matHeaderCellDef> Titulo </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.tituloSoporte }}
+                        </td>
+                    </ng-container>
+
+
+
+                    <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef=""> Descripcion </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.descripcionSoporte }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="usuario">
+                        <th mat-header-cell *matHeaderCellDef=""> Usuario </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.usuario.nameUsuario }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pendiente">
+                        <th mat-header-cell *matHeaderCellDef> Pendiente </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox class="pendiente-check" [checked]="element.pendienteSoporte"
+                                (change)="onPendienteChange(element, $event.checked)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+
+                <mat-paginator #paginatorClient class="paginator" [pageSizeOptions]="[4,6]" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+
+
+        </main>
+    </div>
+</body> -->
