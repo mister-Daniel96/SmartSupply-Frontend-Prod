@@ -1,0 +1,204 @@
+<div class="min-h-screen bg-slate-100 px-4 py-6 md:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <span
+          class="inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700"
+        >
+          Administración
+        </span>
+
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          Gestión de usuarios
+        </h1>
+
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 md:text-base">
+          Administra los usuarios del sistema, crea nuevas cuentas y actualiza su información.
+        </p>
+      </div>
+
+      <div
+        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+      >
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-blue-600 font-bold text-white"
+        >
+          {{ getIniciales() }}
+        </div>
+
+        <div class="flex min-w-0 flex-col">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
+            {{ usuario.nameUsuario || 'Usuario' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 md:text-2xl">
+            Usuarios registrados
+          </h2>
+          <p class="mt-1 text-sm text-slate-500">
+            Visualiza y administra la información de los usuarios del sistema.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="abrirDialogoNuevo()"
+          class="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <i class="fa-solid fa-user-plus"></i>
+          Agregar usuario
+        </button>
+      </div>
+
+      <ng-container *ngIf="usuarios.length > 0; else sinUsuarios">
+        <div class="overflow-hidden rounded-2xl border border-slate-200">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Código
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Nombre
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Correo
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Rol
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Contraseña
+                  </th>
+                  <th class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Activado
+                  </th>
+                  <th class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wide text-slate-500">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y divide-slate-100 bg-white">
+                <tr *ngFor="let element of usuariosPaginados" class="hover:bg-slate-50">
+                  <td class="px-4 py-3 text-sm text-slate-700">
+                    {{ element.idUsuario }}
+                  </td>
+
+                  <td class="px-4 py-3 text-sm font-medium text-slate-800">
+                    {{ element.nameUsuario }}
+                  </td>
+
+                  <td class="px-4 py-3 text-sm text-slate-700">
+                    {{ element.emailUsuario }}
+                  </td>
+
+                  <td class="px-4 py-3 text-sm text-slate-700">
+                    {{ element.rolUsuario }}
+                  </td>
+
+                  <td class="px-4 py-3 text-sm text-slate-500">
+                    <div class="flex items-center gap-1">
+                      <i class="fa-solid fa-lock"></i>
+                      <i class="fa-solid fa-lock"></i>
+                      <i class="fa-solid fa-lock"></i>
+                      <i class="fa-solid fa-lock"></i>
+                    </div>
+                  </td>
+
+                  <td class="px-4 py-3 text-center">
+                    <span
+                      class="inline-block h-3 w-3 rounded-full"
+                      [ngClass]="element.enabledUsuario ? 'bg-green-500' : 'bg-red-500'"
+                    ></span>
+                  </td>
+
+                  <td class="px-4 py-3">
+                    <div class="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        (click)="abrirDialogoEditar(element)"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white transition hover:bg-blue-700"
+                        title="Editar"
+                      >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
+
+                      <button
+                        type="button"
+                        (click)="eliminar(element.idUsuario)"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-white transition hover:bg-red-700"
+                        title="Eliminar"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-slate-500">
+            Página {{ currentPage }} de {{ totalPages }}
+          </p>
+
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              (click)="irPaginaAnterior()"
+              [disabled]="currentPage === 1"
+              class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Anterior
+            </button>
+
+            <button
+              type="button"
+              (click)="irPaginaSiguiente()"
+              [disabled]="currentPage === totalPages"
+              class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #sinUsuarios>
+        <div
+          class="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center"
+        >
+          <div
+            class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-slate-500"
+          >
+            <span class="text-xl">👥</span>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800">
+            No hay usuarios registrados
+          </h3>
+          <p class="mt-2 max-w-md text-sm text-slate-500">
+            Aún no se han registrado usuarios en el sistema.
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  @if (mostrarDialogo && usuarioDialogo) {
+    <app-usuario-dialog
+      [data]="usuarioDialogo"
+      (cerrar)="cerrarDialogo()"
+      (guardarUsuario)="guardarUsuario($event)"
+    />
+  }
+</div>

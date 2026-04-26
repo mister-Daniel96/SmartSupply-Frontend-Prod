@@ -1,0 +1,122 @@
+.app-body {
+    background: #f3f4f6;
+    color: #111827;
+    min-height: 100vh;
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.page {
+    flex: 1;
+    padding: 2.5rem;
+}
+
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: #82889e 0.2px solid;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
+.user-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-mini__avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.user-mini__name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+
+.card {
+    padding: 5px;
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.05);
+    display: flex;
+    justify-content: center;
+
+}
+
+.card-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+
+.profile__avatar-wrap {
+    position: relative;
+}
+
+.profile__avatar {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.profile__name {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.container {
+    display: block;
+    margin-top: 2rem;
+    box-shadow: none;
+}
+
+.toolbar-usuarios {
+    display: flex;
+    justify-content: flex-end;
+    /* botón a la derecha */
+    margin-bottom: 1rem;
+    /* separarlo un poco de la tabla */
+}
+
+.btnCrear {
+    background-color: #00a859 !important;
+    /* verde */
+    color: #ffffff !important;
+    /* texto blanco */
+}
+
+/* Opcional: efecto hover */
+.btnCrear:hover {
+    filter: brightness(0.9);
+}

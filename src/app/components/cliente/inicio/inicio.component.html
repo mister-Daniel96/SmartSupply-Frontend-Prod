@@ -1,0 +1,111 @@
+<div class="min-h-screen bg-slate-100 px-4 py-6 md:px-6">
+  <main class="mx-auto max-w-7xl">
+    <header class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <span
+          class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
+        >
+          Panel principal
+        </span>
+
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          ¿Qué haremos hoy?
+        </h1>
+
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 md:text-base">
+          Vista general de la demanda pronosticada por tipo de artículo para la próxima semana.
+        </p>
+      </div>
+
+      <div
+        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+      >
+        <img
+          alt="Avatar de usuario"
+          class="h-12 w-12 rounded-full object-cover ring-2 ring-slate-100"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK"
+        />
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-slate-400">Bienvenido</p>
+          <p class="truncate text-sm font-semibold text-slate-800">
+            {{ usuario.nameUsuario }}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 md:text-2xl">
+            Demanda pronosticada por tipo de artículo
+          </h2>
+          <p class="mt-1 text-sm text-slate-500">
+            Visualiza la proyección estimada para los próximos 7 días.
+          </p>
+        </div>
+
+        <span
+          *ngIf="rangoTexto"
+          class="inline-flex rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 md:text-sm"
+        >
+          {{ rangoTexto }}
+        </span>
+      </div>
+
+      <div
+        *ngIf="isCargando"
+        class="flex min-h-[280px] flex-col items-center justify-center py-8"
+      >
+        <div
+          class="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"
+        ></div>
+        <p class="mt-4 text-sm font-medium text-slate-500">
+          Calculando predicciones de la próxima semana...
+        </p>
+      </div>
+
+      <div
+        *ngIf="!isCargando && graficosDashboard.length; else sinDatos"
+        class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
+      >
+        <article
+          *ngFor="let graf of graficosDashboard"
+          class="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+        >
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-800">
+              {{ graf.nombreArticulo }}
+            </h3>
+            <p class="mt-1 text-sm text-slate-500">
+              Demanda pronosticada (7 días)
+            </p>
+          </div>
+
+          <div class="relative h-64">
+            <canvas [id]="graf.chartId" class="h-full w-full"></canvas>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #sinDatos>
+        <div
+          *ngIf="!isCargando"
+          class="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center"
+        >
+          <div
+            class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-slate-500"
+          >
+            <i class="fa-solid fa-chart-line text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800">
+            No se encontraron predicciones
+          </h3>
+          <p class="mt-2 max-w-md text-sm text-slate-500">
+            No se encontraron datos de predicción para los tipos de artículo seleccionados.
+          </p>
+        </div>
+      </ng-template>
+    </section>
+  </main>
+</div>

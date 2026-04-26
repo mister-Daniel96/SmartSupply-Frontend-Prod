@@ -1,0 +1,233 @@
+<div class="min-h-screen bg-slate-100 px-4 py-6 md:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <span
+          class="inline-flex rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-violet-700"
+        >
+          Administración
+        </span>
+
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          Cargar data
+        </h1>
+
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 md:text-base">
+          Carga archivos históricos en formato CSV o Excel para actualizar la información del sistema.
+        </p>
+      </div>
+
+      <div
+        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+      >
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 font-bold text-white"
+        >
+          {{ getIniciales() }}
+        </div>
+
+        <div class="flex min-w-0 flex-col">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
+            {{ usuario.nameUsuario || 'Usuario' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div
+        class="mb-8 flex flex-col gap-4 rounded-3xl border border-violet-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-5 md:flex-row md:items-center md:justify-between"
+      >
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900">
+            Carga de archivos
+          </h2>
+          <p class="mt-2 text-sm text-slate-600">
+            Descarga la plantilla base, revisa la vista previa y luego sube el archivo al sistema.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="descargarPlantilla()"
+          class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <i class="fa-solid fa-download"></i>
+          Descargar plantilla
+        </button>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 md:p-6">
+        @if (!selectedFile) {
+          <div
+            class="rounded-2xl border-2 border-dashed border-slate-300 bg-white p-8 text-center transition hover:border-violet-400"
+            (dragover)="$event.preventDefault()"
+            (drop)="onFileDrop($event)"
+          >
+            <div
+              class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-violet-100 text-violet-700"
+            >
+              <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900">
+              Subir archivo
+            </h3>
+
+            <p class="mt-2 text-sm text-slate-500">
+              Arrastra y suelta tu archivo aquí o selecciónalo desde tu equipo.
+            </p>
+
+            <p class="mt-1 text-xs text-slate-400">
+              Formatos aceptados: .xlsx, .xls, .csv
+            </p>
+
+            <input
+              #fileInput
+              type="file"
+              class="hidden"
+              (change)="onFileSelected($event)"
+              accept=".xlsx,.xls,.csv"
+            />
+
+            <button
+              type="button"
+              (click)="fileInput.click()"
+              [disabled]="isUploading || isPreviewLoading"
+              class="mt-5 inline-flex items-center justify-center rounded-xl border border-violet-200 bg-violet-50 px-5 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Elegir archivo
+            </button>
+          </div>
+        } @else {
+          <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm font-medium text-emerald-700">
+                  Archivo seleccionado: {{ selectedFile.name }}
+                </p>
+                <p class="mt-1 text-xs text-emerald-600">
+                  Tamaño: {{ getFileSize(selectedFile.size) }}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-2 sm:flex-row">
+                <input
+                  #replaceInput
+                  type="file"
+                  class="hidden"
+                  (change)="reemplazarArchivo($event)"
+                  accept=".xlsx,.xls,.csv"
+                />
+
+                <button
+                  type="button"
+                  (click)="replaceInput.click()"
+                  [disabled]="isUploading || isPreviewLoading"
+                  class="inline-flex items-center justify-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Reemplazar
+                </button>
+
+                <button
+                  type="button"
+                  (click)="limpiarArchivo()"
+                  [disabled]="isUploading"
+                  class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Quitar
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (isPreviewLoading) {
+          <div class="mt-6 flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center">
+            <div class="h-12 w-12 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600"></div>
+            <p class="mt-4 text-sm font-medium text-slate-500">
+              Generando vista previa...
+            </p>
+          </div>
+        }
+
+        @if (previewError) {
+          <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3">
+            <p class="text-sm font-medium text-red-700">
+              {{ previewError }}
+            </p>
+          </div>
+        }
+
+        @if (!isPreviewLoading && previewRows.length > 0) {
+          <div class="mt-6">
+            <div class="mb-3">
+              <h3 class="text-lg font-bold text-slate-900">Vista previa del archivo</h3>
+              <p class="mt-1 text-sm text-slate-500">
+                Se muestran las primeras 10 filas detectadas.
+              </p>
+            </div>
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      @for (header of previewHeaders; track header) {
+                        <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+                          {{ header }}
+                        </th>
+                      }
+                    </tr>
+                  </thead>
+
+                  <tbody class="divide-y divide-slate-100 bg-white">
+                    @for (row of previewRows; track $index) {
+                      <tr class="hover:bg-slate-50">
+                        @for (header of previewHeaders; track header) {
+                          <td class="px-4 py-3 text-sm text-slate-700">
+                            {{ row[header] }}
+                          </td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (isUploading) {
+          <div class="mt-6 flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center">
+            <div class="h-12 w-12 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600"></div>
+            <p class="mt-4 text-sm font-medium text-slate-500">
+              Cargando archivo al sistema...
+            </p>
+          </div>
+        }
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            (click)="limpiarArchivo()"
+            [disabled]="!selectedFile || isUploading"
+            class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Limpiar
+          </button>
+
+          <button
+            type="button"
+            (click)="onUpload()"
+            [disabled]="!selectedFile || isUploading || isPreviewLoading || previewRows.length === 0"
+            class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {{ isUploading ? 'Procesando...' : 'Cargar archivo' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

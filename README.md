@@ -25,3 +25,14 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+##  DESCRIPCION DEL PROYECTO
+Version de angular
+
+## instalaciones que tenemos
+npm install @auth0/angular-jwt
+npm install tailwindcss @tailwindcss/postcss postcss
+npm install sweetalert2
+npm install bcryptjs
+ng add ng2-charts
+npm install xlsx   -------ára excel

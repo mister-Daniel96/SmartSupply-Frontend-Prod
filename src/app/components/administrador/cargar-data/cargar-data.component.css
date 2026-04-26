@@ -1,0 +1,340 @@
+* {
+    color: #1e293b
+}
+
+.app-body {
+    background: #f3f4f6;
+    color: #111827;
+    min-height: 100vh;
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.page {
+    flex: 1;
+    padding: 2.5rem;
+}
+
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: #82889e 0.2px solid;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
+.user-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-mini__avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.user-mini__name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+
+.card {
+    padding: 5px;
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.05);
+    display: flex;
+    justify-content: center;
+
+}
+
+.card-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+
+.profile__avatar-wrap {
+    position: relative;
+}
+
+.profile__avatar {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.profile__name {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.container {
+    display: block;
+    margin-top: 5rem;
+
+}
+
+
+
+
+.container {
+    margin-top: 2rem;
+}
+
+.upload-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+.upload-header__text {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #0f172a;
+}
+
+.upload-header__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: #16a34a;
+    /* verde */
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.35);
+    transition: transform 0.1s ease, box-shadow 0.1s ease,
+        background-color 0.1s ease;
+}
+
+.upload-header__btn:hover {
+    background-color: #15803d;
+    box-shadow: 0 10px 24px rgba(22, 163, 74, 0.4);
+    transform: translateY(-1px);
+}
+
+.upload-header__btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.upload-card {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.upload-dropzone {
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+}
+
+.upload-dropzone__inner {
+    border-radius: 16px;
+    padding: 2.5rem 1rem;
+    border: 1px dashed transparent;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.upload-dropzone__icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-dropzone__title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.upload-dropzone__subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.upload-dropzone__input {
+    display: none;
+}
+
+.upload-dropzone__choose-btn {
+    margin-top: 1rem;
+    border-radius: 999px;
+    border: 1px solid #1e293b;
+    padding: 0.45rem 1.4rem;
+    background-color: transparent;
+    color: #1e293b;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.1s ease, color 0.1s ease,
+        transform 0.1s ease;
+}
+
+.upload-dropzone__choose-btn:hover {
+    background-color: #1e293b;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.upload-card__submit-btn {
+    align-self: center;
+    margin: 0 auto;
+    min-width: 200px;
+    border: none;
+    border-radius: 999px;
+    padding: 0.7rem 2.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background-color: #0f172a;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+    transition: background-color 0.1s ease, transform 0.1s ease,
+        box-shadow 0.1s ease;
+}
+
+.upload-card__submit-btn:hover:not(:disabled) {
+    background-color: #020617;
+    transform: translateY(-1px);
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.5);
+}
+
+.upload-card__submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .upload-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .upload-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .upload-header__btn {
+        align-self: stretch;
+        justify-content: center;
+    }
+}
+.container {
+  margin-top: 2rem;
+}
+
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.upload-header__text {
+  margin: 0;
+  font-weight: 500;
+}
+
+.upload-card {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 24px;
+}
+
+.upload-dropzone {
+  border-radius: 20px;
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+  padding: 1.5rem;
+}
+
+.upload-dropzone__inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.upload-dropzone__icon {
+  font-size: 40px;
+  margin-bottom: 0.5rem;
+}
+
+.upload-dropzone__title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.upload-dropzone__subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.upload-dropzone__input {
+  display: none;
+}
+
+.upload-dropzone__choose-btn {
+  margin-top: 1rem;
+}
+
+.upload-card__submit-btn {
+  min-width: 180px;
+}
