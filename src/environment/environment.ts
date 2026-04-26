@@ -1,4 +1,4 @@
 export const environment = {
   production : false,
-  base : 'http://localhost:9010',
+  base : 'https://smartsupply-backend-prod.onrender.com',
 };

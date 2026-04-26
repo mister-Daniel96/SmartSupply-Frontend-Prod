@@ -36,3 +36,4 @@ npm install sweetalert2
 npm install bcryptjs
 ng add ng2-charts
 npm install xlsx   -------ára excel
+ng build --configuration production  para la construccion de produccion
