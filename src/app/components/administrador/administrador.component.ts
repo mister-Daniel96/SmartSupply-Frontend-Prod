@@ -1,52 +1,17 @@
-/* import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, inject, ViewChild } from '@angular/core';
-import {
-  MatSidenav,
-  MatSidenavContent,
-  MatSidenavContainer,
-} from '@angular/material/sidenav';
-import {
-  ActivatedRoute,
-  Router,
-  RouterOutlet,
-  RouterLink,
-} from '@angular/router';
-import { map, Observable, shareReplay, startWith } from 'rxjs';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatIcon } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { CommonModule, AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Component, HostListener } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-administrador',
   standalone: true,
-  imports: [
-    CommonModule,
-    AsyncPipe,
-    MatSidenavContent,
-    MatToolbar,
-    RouterOutlet,
-    MatIcon,
-    MatListModule,
-    MatSidenavContainer,
-    MatSidenav,
-    RouterLink,
-  ],
+  imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './administrador.component.html',
-  styleUrl: './administrador.component.css',
+  styleUrls: ['./administrador.component.css'],
 })
 export class AdministradorComponent {
-  id: number = 0;
-  private breakpointObserver = inject(BreakpointObserver);
-  @ViewChild('drawer') drawer!: MatSidenav;
-
-  isHandset$: Observable<boolean> = this.breakpointObserver
-    .observe(Breakpoints.Handset)
-    .pipe(
-      map((result) => result.matches),
-      startWith(false), 
-      shareReplay()
-    );
+  menuOpen = false;
+  isMobile = false;
 
   botones = [
     {
@@ -66,26 +31,41 @@ export class AdministradorComponent {
     },
   ];
 
-  constructor(public route: ActivatedRoute, private router: Router) {}
-
-  ngOnInit(): void {
-    this.route.params.subscribe((data) => {
-      this.id = +data['id'];
-    });
+  constructor(private router: Router) {
+    this.checkScreen();
   }
 
-  cerrar() {
-    sessionStorage.clear();
+  @HostListener('window:resize')
+  onResize(): void {
+    this.checkScreen();
+  }
+
+  private checkScreen(): void {
+    this.isMobile = window.innerWidth < 1024;
+
+    if (!this.isMobile) {
+      this.menuOpen = false;
+    }
   }
 
   toggleSidenav(): void {
-    if (window.innerWidth < 960) {
-      this.drawer.toggle();
+    if (this.isMobile) {
+      this.menuOpen = !this.menuOpen;
     }
+  }
+
+  closeMenuOnMobile(): void {
+    if (this.isMobile) {
+      this.menuOpen = false;
+    }
+  }
+
+  cerrar(): void {
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   isLinkActive(ruta: string): boolean {
     return this.router.url.includes(ruta);
   }
 }
- */

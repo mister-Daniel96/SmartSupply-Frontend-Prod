@@ -1,82 +1,155 @@
-/* import { Component, OnInit, signal } from '@angular/core';
-import { Usuario } from '../../../models/usuario';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UsuarioService } from '../../../services/usuario.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SoporteService } from '../../../services/soporte.service';
-import { Soporte } from '../../../models/soporte';
-import Swal from 'sweetalert2';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import Swal from 'sweetalert2';
+
+import { Usuario } from '../../../models/usuario';
+import { Soporte } from '../../../models/soporte';
+import { UsuarioService } from '../../../services/usuario.service';
+import { SoporteService } from '../../../services/soporte.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-soporte',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './soporte.component.html',
-  styleUrl: './soporte.component.css',
+  styleUrls: ['./soporte.component.css'],
 })
 export class SoporteComponent implements OnInit {
-  readonly panelOpenState = signal(false);
   usuario = new Usuario();
   id = 0;
   form!: FormGroup;
-  soporte = new Soporte();
   list: Soporte[] = [];
+
   constructor(
-    private FormBuilder: FormBuilder,
+    private fb: FormBuilder,
     private uS: UsuarioService,
     private sS: SoporteService,
-    public route: ActivatedRoute,
-    private router: Router
+    private loginService: LoginService
   ) {}
+
   ngOnInit(): void {
-    this.route.parent?.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      this.id = Number(idParam);
+    this.form = this.fb.group({
+      tituloSoporte: ['', Validators.required],
+      descripcionSoporte: ['', Validators.required],
     });
 
-    this.uS.listId(this.id).subscribe((data) => {
-      this.usuario = data;
-    });
+    this.id = Number(this.loginService.showId()) || 0;
+    console.log('ID token soporte:', this.id);
 
-    this.form = this.FormBuilder.group({
-      tituloSoporte: [''],
-      descripcionSoporte: [''],
-    });
-
-    this.sS.list().subscribe((data) => {
-      this.sS.setList(data); // actualizas el Subject
-      this.list = data; // actualizas tu lista local
-      console.log('Soportes cargados:', this.list);
-    });
-  }
-
-  aceptar() {
-    if (this.form.valid) {
-      this.soporte.tituloSoporte = this.form.value.tituloSoporte;
-      this.soporte.descripcionSoporte = this.form.value.descripcionSoporte;
-      this.soporte.pendienteSoporte = true;
-      this.soporte.fechaSoporte = new Date(Date.now());
-      this.soporte.usuario.idUsuario = this.usuario.idUsuario;
-
-      this.sS.insert(this.soporte).subscribe(() => {
-        // Después del insert recargamos lista y actualizamos Subject
-        this.sS.list().subscribe((data) => {
-          this.sS.setList(data); // refresca todo el sistema
-          this.list = data; // refresca este componente
-        });
-
-        // Opcional: limpiar formulario
-        this.form.reset();
-      });
+    if (this.id > 0) {
+      this.cargarUsuario();
+      this.cargarSoportes();
+    } else {
       Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Incidencia registrada correctamente, Pronto lo solucionaremos',
-        showConfirmButton: false,
-        timer: 3000,
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo obtener el id del usuario desde el token',
       });
     }
   }
+
+  cargarUsuario(): void {
+    this.uS.listId(this.id).subscribe({
+      next: (data) => {
+        console.log('Usuario soporte:', data);
+        this.usuario = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar la información del usuario',
+        });
+      },
+    });
+  }
+
+  cargarSoportes(): void {
+    this.sS.list().subscribe({
+      next: (data) => {
+        this.sS.setList(data);
+        this.list = data;
+        console.log('Soportes cargados:', this.list);
+      },
+      error: (err) => {
+        console.error('Error al cargar soportes', err);
+      },
+    });
+  }
+
+  aceptar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    if (!this.usuario?.idUsuario) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo identificar al usuario que reporta la incidencia',
+      });
+      return;
+    }
+
+    const soporte = new Soporte();
+    soporte.tituloSoporte = this.form.value.tituloSoporte.trim();
+    soporte.descripcionSoporte = this.form.value.descripcionSoporte.trim();
+    soporte.pendienteSoporte = true;
+    soporte.fechaSoporte = new Date();
+
+    soporte.usuario = new Usuario();
+    soporte.usuario.idUsuario = this.usuario.idUsuario;
+
+    this.sS.insert(soporte).subscribe({
+      next: () => {
+        this.form.reset();
+        this.cargarSoportes();
+
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Incidencia registrada correctamente',
+          text: 'Pronto revisaremos tu reporte.',
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      },
+      error: (err) => {
+        console.error('Error al registrar soporte', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo registrar la incidencia',
+        });
+      },
+    });
+  }
+
+  cancelar(): void {
+    this.form.reset();
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+  }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario || '';
+
+    return (
+      nombre
+        .split(' ')
+        .filter((x: string) => x.trim().length > 0)
+        .map((x: string) => x.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('') || 'U'
+    );
+  }
 }
- */

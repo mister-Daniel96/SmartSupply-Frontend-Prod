@@ -2,38 +2,40 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtRequest } from '../models/jwtRequest';
+
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  
+  private helper = new JwtHelperService();
+
   constructor(private http: HttpClient) {}
 
   login(request: JwtRequest) {
     return this.http.post(`http://localhost:9010/authenticate`, request);
   }
 
-  verificar() {
-    let token = sessionStorage.getItem('token');
-    return token != null;
+  verificar(): boolean {
+    return sessionStorage.getItem('token') != null;
   }
 
-  showRole() {
-    let token = sessionStorage.getItem('token');
-    if (!token) {
-      return null;
-    }
-    const helper = new JwtHelperService(); //decodifica el token
-    const decodedToken = helper.decodeToken(token); //contiene informacion extraida
-    return decodedToken?.role; //devuelve el rol
+  getToken(): string | null {
+    return sessionStorage.getItem('token');
   }
-  showId() {
-    let token = sessionStorage.getItem('token');
-    if (!token) {
-      return null;
-    }
-    const helper = new JwtHelperService(); //decodifica el token
-    const decodedToken = helper.decodeToken(token); //contiene informacion extraida
-    return decodedToken?.id; //devuelve el id
+
+  getDecodedToken(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    return this.helper.decodeToken(token);
+  }
+
+  showRole(): string | null {
+    return this.getDecodedToken()?.role ?? null;
+  }
+
+  showId(): number | null {
+    const id = this.getDecodedToken()?.id;
+    return id != null ? Number(id) : null;
   }
 }

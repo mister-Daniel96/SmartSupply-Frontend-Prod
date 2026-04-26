@@ -1,59 +1,121 @@
-<!-- <body class="app-body">
-  <div class="layout">
-    <main class="page">
+<form [formGroup]="form" class="min-h-screen bg-slate-100 px-4 py-6 md:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <span
+          class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700"
+        >
+          Soporte
+        </span>
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          Centro de soporte
+        </h1>
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 md:text-base">
+          Reporta inconvenientes y ayúdanos a resolverlos lo más pronto posible.
+        </p>
+      </div>
 
-      <header class="topbar">
-        <h1 class="page-title">Soporte</h1>
-        <div class="user-mini">
-          <img alt="Avatar de usuario" class="user-mini__avatar"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
-          <span class="user-mini__name">
-            {{ usuario.nameUsuario }}
+      <div
+        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+      >
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 font-bold text-white"
+        >
+          {{ getIniciales() }}
+        </div>
+        <div class="flex min-w-0 flex-col">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
+            {{ usuario.nameUsuario || 'Usuario' }}
           </span>
         </div>
+      </div>
+    </div>
 
-      </header>
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div class="mb-8 rounded-3xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-5">
+        <h2 class="text-xl font-extrabold text-slate-900">
+          Reporta los inconvenientes
+        </h2>
+        <p class="mt-2 text-sm text-slate-600">
+          Cuéntanos qué ocurrió para que podamos ayudarte lo más rápido posible.
+        </p>
+      </div>
 
-      <div class="card">
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label
+            for="tituloSoporte"
+            class="mb-2 block text-sm font-semibold text-slate-700"
+          >
+            Asunto
+          </label>
+          <input
+            formControlName="tituloSoporte"
+            id="tituloSoporte"
+            type="text"
+            placeholder="Ej. Error al generar una predicción"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+          />
 
-
-        <div class="profile">
-
-          <div class="support-container">
-
-            <h3 class="support-title">Reporta los inconvenientes</h3>
-            <p class="support-subtitle">
-              Cuéntanos qué ocurrió para que podamos ayudarte lo más rápido posible.
-            </p>
-
-            <form class="support-form"  [formGroup]="form">
-
-              <div class="form-group">
-                <label for="tituloSoporte">Asunto</label>
-                <input formControlName="tituloSoporte" id="tituloSoporte" type="text" placeholder="Ej. Error al generar una predicción" />
-              </div>
-
-              <div class="form-group">
-                <label for="descripcionSoporte">Descripción</label>
-                <textarea  formControlName="descripcionSoporte" id="descripcionSoporte" rows="4"
-                  placeholder="Describe el problema, qué estabas haciendo y si apareció algún error…"></textarea>
-                <small class="help-text">
-                  Mientras más detalle brindes, más rápido podremos ayudarte.
-                </small>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" class="btn btn-ghost">Cancelar</button>
-                <button type="submit" class="btn btn-primary" (click)="aceptar()">Enviar reporte</button>
-              </div>
-
-            </form>
-          </div>
-
-
+          @if (form.get('tituloSoporte')?.hasError('required') &&
+          form.get('tituloSoporte')?.touched) {
+            <small class="mt-2 block text-xs font-medium text-red-600">
+              El asunto es obligatorio.
+            </small>
+          }
         </div>
 
+        <div>
+          <label
+            for="descripcionSoporte"
+            class="mb-2 block text-sm font-semibold text-slate-700"
+          >
+            Descripción
+          </label>
+          <textarea
+            formControlName="descripcionSoporte"
+            id="descripcionSoporte"
+            rows="6"
+            placeholder="Describe el problema, qué estabas haciendo y si apareció algún error…"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+          ></textarea>
+
+          <div class="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <small class="text-xs text-slate-500">
+              Mientras más detalle brindes, más rápido podremos ayudarte.
+            </small>
+
+            <small class="text-xs text-slate-400">
+              {{ form.get('descripcionSoporte')?.value?.length || 0 }} caracteres
+            </small>
+          </div>
+
+          @if (form.get('descripcionSoporte')?.hasError('required') &&
+          form.get('descripcionSoporte')?.touched) {
+            <small class="mt-2 block text-xs font-medium text-red-600">
+              La descripción es obligatoria.
+            </small>
+          }
+        </div>
       </div>
-    </main>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          (click)="aceptar()"
+          class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Enviar reporte
+        </button>
+      </div>
+    </div>
   </div>
-</body> -->
+</form>

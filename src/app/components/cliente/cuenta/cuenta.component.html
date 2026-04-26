@@ -1,84 +1,236 @@
-<!-- <body class="app-body">
-  <div class="layout">
-    <main class="page">
-      <header class="topbar">
-        <h1 class="page-title">Mi Cuenta</h1>
-        <div class="user-mini">
-          <img alt="Avatar de usuario" class="user-mini__avatar"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK" />
-          <span class="user-mini__name">
-            {{ form.value.nameUsuario || 'Usuario' }}
+<form [formGroup]="form" class="min-h-screen bg-slate-100 px-4 py-6 md:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <span
+          class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
+        >
+          Perfil
+        </span>
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          Mi cuenta
+        </h1>
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 md:text-base">
+          Revisa tu información personal y administra la seguridad de tu cuenta.
+        </p>
+      </div>
+
+      <div
+        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+      >
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-violet-600 font-bold text-white"
+        >
+          {{ getIniciales() }}
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
+            {{ form.get('nameUsuario')?.value || 'Usuario' }}
           </span>
         </div>
-      </header>
+      </div>
+    </div>
 
-      <div class="card">
-        <div class="card-inner">
-          <div class="profile">
-            <div class="profile__avatar-wrap">
-              <img alt="Foto de perfil" class="profile__avatar"
-                src="data:image/png;base64,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" />
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+      <div
+        class="mb-8 flex flex-col gap-4 rounded-3xl border border-blue-100 bg-gradient-to-r from-blue-50 to-violet-50 p-5 md:flex-row md:items-center"
+      >
+        <div
+          class="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-violet-600 text-2xl font-bold text-white shadow-md"
+        >
+          {{ getIniciales() }}
+        </div>
 
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">
+            {{ form.get('nameUsuario')?.value || 'Usuario' }}
+          </h2>
+          <p class="mt-1 text-sm text-slate-500">
+            {{ form.get('emailUsuario')?.value || 'Correo' }}
+          </p>
+          <span
+            class="mt-3 inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700"
+          >
+            {{ form.get('rolUsuario')?.value || 'Sin rol' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 md:p-6">
+          <div class="mb-4">
+            <h3 class="text-lg font-bold text-slate-900">Información personal</h3>
+            <p class="text-sm text-slate-500">Datos registrados en tu cuenta</p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label
+                for="nombre"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Nombre
+              </label>
+              <input
+                id="nombre"
+                type="text"
+                formControlName="nameUsuario"
+                readonly
+                class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-700 outline-none"
+              />
             </div>
-            <div class="profile__info">
-              <h2 class="profile__name">
-                {{ form.value.nameUsuario || 'Usuario' }}
-              </h2>
-              <p class="profile__email">
-                {{ form.value.emailUsuario || 'Correo' }}
+
+            <div>
+              <label
+                for="rol"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Rol
+              </label>
+              <input
+                id="rol"
+                type="text"
+                formControlName="rolUsuario"
+                readonly
+                class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-700 outline-none"
+              />
+            </div>
+
+            <div>
+              <label
+                for="email"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Correo electrónico
+              </label>
+              <input
+                id="email"
+                type="email"
+                formControlName="emailUsuario"
+                readonly
+                class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-700 outline-none"
+              />
+            </div>
+
+            <div>
+              <label
+                for="telefono"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Número de teléfono
+              </label>
+              <input
+                id="telefono"
+                type="tel"
+                formControlName="phoneUsuario"
+                readonly
+                class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-700 outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 md:p-6">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">Seguridad de la cuenta</h3>
+              <p class="mt-1 text-sm text-slate-500">
+                Administra el acceso y actualiza tu contraseña cuando lo necesites.
               </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="abrirModalPassword()"
+              class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+            >
+              Cambiar contraseña
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (mostrarModalPassword) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
+    >
+      <div class="w-full max-w-lg rounded-3xl bg-white shadow-2xl">
+        <div class="border-b border-slate-200 px-6 py-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-extrabold text-slate-900">
+                Cambiar contraseña
+              </h3>
+              <p class="mt-1 text-sm text-slate-500">
+                Ingresa una nueva contraseña segura para tu cuenta.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="cerrarModalPassword()"
+              class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div class="px-6 py-5">
+          <div class="space-y-4">
+            <div>
+              <label
+                for="password"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Nueva contraseña
+              </label>
+              <input
+                id="password"
+                type="password"
+                formControlName="passwordUsuario"
+                placeholder="Ingresa una nueva contraseña"
+                class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
+
+              @if (form.get('passwordUsuario')?.hasError('required') &&
+              form.get('passwordUsuario')?.touched) {
+                <small class="mt-2 block text-xs font-medium text-red-600">
+                  La contraseña es obligatoria.
+                </small>
+              }
+
+              @if (form.get('passwordUsuario')?.hasError('minlength') &&
+              form.get('passwordUsuario')?.touched) {
+                <small class="mt-2 block text-xs font-medium text-red-600">
+                  La contraseña debe tener al menos 8 caracteres.
+                </small>
+              }
             </div>
           </div>
 
-          <form [formGroup]="form">
-            <div class="section">
-              <h3 class="section__title">Información personal</h3>
-              <div class="form-grid">
-                <div class="form-field">
-                  <label for="nombre">Nombre</label>
-                  <input id="nombre" type="text" class="input" [value]="form.value.nameUsuario" readonly />
-                </div>
-                <div class="form-field">
-                  <label for="rol">Rol</label>
-                  <input id="rol" type="text" class="input" [value]="form.value.rolUsuario" readonly />
-                </div>
-                <div class="form-field">
-                  <label for="email">Correo electrónico</label>
-                  <input id="email" type="email" class="input" [value]="form.value.emailUsuario" readonly />
-                </div>
-                <div class="form-field">
-                  <label for="telefono">Número de teléfono</label>
-                  <input id="telefono" type="tel" class="input" [value]="form.value.phoneUsuario" readonly />
-                </div>
-              </div>
-            </div>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              (click)="cerrarModalPassword()"
+              class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Cancelar
+            </button>
 
-            <hr class="divider" />
-
-            <div class="section">
-              <h3 class="section__title">Seguridad de la cuenta</h3>
-              <div class="security-item">
-                <div class="form-field_password">
-                  <h4 class="security-item__title">Contraseña</h4>
-                  <input formControlName="passwordUsuario" type="password" class="input input--ghost input_password"
-                    [value]="form.value.passwordUsuario" [disabled]="flagPassword" />
-                </div>
-                <button class="link-button" type="button" (click)="changeFlagPassword()">
-                  Cambiar contraseña
-                </button>
-              </div>
-            </div>
-
-            <div class="actions">
-
-              <button type="submit" class="btn btn--primary btn_guardar_cambios" [disabled]="flagPassword"
-                (click)="aceptar()">
-                Guardar cambios
-              </button>
-            </div>
-          </form>
+            <button
+              type="button"
+              (click)="aceptar()"
+              class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              Guardar nueva contraseña
+            </button>
+          </div>
         </div>
       </div>
-    </main>
-  </div>
-</body> -->
+    </div>
+  }
+</form>

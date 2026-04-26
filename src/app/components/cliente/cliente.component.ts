@@ -15,11 +15,11 @@ export class ClienteComponent {
 
   botones = [
     { texto: 'Inicio', ruta: 'inicio', icon: 'fa-solid fa-house' },
-    {
+    /* {
       texto: 'Ventas',
       ruta: 'predicciones',
       icon: 'fa-solid fa-cash-register',
-    },
+    }, */
     {
       texto: 'Predicciones',
       ruta: 'predicciones',

@@ -1,1 +1,149 @@
-<p>usuario-dialog works!</p>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
+  <div class="w-full max-w-2xl rounded-3xl bg-white shadow-2xl">
+    <div class="border-b border-slate-200 px-6 py-5">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">
+            {{ data.idUsuario ? 'Editar usuario' : 'Registrar usuario' }}
+          </h3>
+          <p class="mt-1 text-sm text-slate-500">
+            Completa la información del usuario.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="px-6 py-5">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div *ngIf="data.idUsuario">
+          <label class="mb-2 block text-sm font-semibold text-slate-700">ID</label>
+          <input
+            [ngModel]="data.idUsuario"
+            name="idUsuario"
+            disabled
+            class="h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-sm text-slate-700 outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Nombre de usuario
+          </label>
+          <input
+            [(ngModel)]="data.nameUsuario"
+            name="nameUsuario"
+            type="text"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Correo
+          </label>
+          <input
+            [(ngModel)]="data.emailUsuario"
+            name="emailUsuario"
+            type="email"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Contraseña
+          </label>
+          <input
+            [(ngModel)]="data.passwordUsuario"
+            name="passwordUsuario"
+            type="password"
+            [placeholder]="data.idUsuario ? 'Solo si deseas cambiarla' : 'Ingresa una contraseña'"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">Edad</label>
+          <input
+            [(ngModel)]="data.ageUsuario"
+            name="ageUsuario"
+            type="number"
+            min="0"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">DNI</label>
+          <input
+            [(ngModel)]="data.dniUsuario"
+            name="dniUsuario"
+            type="number"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">Teléfono</label>
+          <input
+            [(ngModel)]="data.phoneUsuario"
+            name="phoneUsuario"
+            type="tel"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">Rol</label>
+          <select
+            [(ngModel)]="data.rolUsuario"
+            name="rolUsuario"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          >
+            <option value="ADMIN">Administrador</option>
+            <option value="CLIENTE">Cliente</option>
+            <option value="SOPORTE">Soporte</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label class="inline-flex items-center gap-3 text-sm font-medium text-slate-700">
+          <input
+            type="checkbox"
+            [(ngModel)]="data.enabledUsuario"
+            name="enabledUsuario"
+            class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+          />
+          Usuario activado
+        </label>
+      </div>
+
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          (click)="guardar()"
+          class="inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

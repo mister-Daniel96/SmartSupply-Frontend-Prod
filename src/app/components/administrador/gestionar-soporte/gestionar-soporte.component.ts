@@ -1,99 +1,131 @@
-/* import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Soporte } from '../../../models/soporte';
-import {
-  MatTableDataSource,
-  MatTable,
-  MatHeaderRow,
-  MatRowDef,
-  MatHeaderRowDef,
-  MatHeaderCellDef,
-  MatCellDef,
-  MatTableModule,
-} from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { UsuarioService } from '../../../services/usuario.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { SoporteService } from '../../../services/soporte.service';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { Component, OnInit, inject } from '@angular/core';
+
+import { Soporte } from '../../../models/soporte';
 import { Usuario } from '../../../models/usuario';
+
+import { UsuarioService } from '../../../services/usuario.service';
+import { SoporteService } from '../../../services/soporte.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-gestionar-soporte',
   standalone: true,
-  imports: [
-    MatPaginator,
-    MatTable,
-    MatHeaderRow,
-    MatRowDef,
-    MatHeaderRowDef,
-    MatHeaderCellDef,
-    MatCellDef,
-    CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatCheckbox,
-  ],
+  imports: [CommonModule],
   templateUrl: './gestionar-soporte.component.html',
-  styleUrl: './gestionar-soporte.component.css',
+  styleUrls: ['./gestionar-soporte.component.css'],
 })
-export class GestionarSoporteComponent implements OnInit, AfterViewInit {
-  dataSource: MatTableDataSource<Soporte> = new MatTableDataSource<Soporte>([]);
-  displayedColumns: string[] = [
-    'codigo',
-    'titulo',
-    'descripcion',
-    'usuario',
-    'pendiente',
-  ];
+export class GestionarSoporteComponent implements OnInit {
+  private uS = inject(UsuarioService);
+  private sS = inject(SoporteService);
+  private loginService = inject(LoginService);
+
   usuario = new Usuario();
   id = 0;
 
-  @ViewChild(MatPaginator) paginatorClient!: MatPaginator;
+  soportes: Soporte[] = [];
 
-  constructor(
-    private uS: UsuarioService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private sS: SoporteService
-  ) {}
+  currentPage = 1;
+  pageSize = 6;
 
   ngOnInit(): void {
-    this.route.parent?.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      this.id = Number(idParam);
-    });
+    this.id = Number(this.loginService.showId()) || 0;
+    console.log('ID token gestionar soporte:', this.id);
 
-    this.uS.listId(this.id).subscribe((data) => {
-      this.usuario = data;
-    });
+    if (this.id > 0) {
+      this.cargarUsuario();
+    } else {
+      console.error('No se pudo obtener el id del usuario desde el token');
+    }
 
-    this.sS.list().subscribe((data) => {
-      this.dataSource.data = data;
-    });
+    this.cargarSoportes();
 
     this.sS.getList().subscribe((data) => {
-      this.dataSource.data = data;
+      this.soportes = data;
+      this.ajustarPaginaActual();
     });
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginatorClient;
-  }
-  onPendienteChange(soporte: Soporte, nuevoValor: boolean) {
-    soporte.pendienteSoporte = nuevoValor;
-
-    this.sS.update(soporte).subscribe({
-      next: () => console.log('Pendiente actualizado'),
+  private cargarUsuario(): void {
+    this.uS.listId(this.id).subscribe({
+      next: (data: Usuario) => {
+        this.usuario = data;
+      },
       error: (err) => {
-        console.error(err);
-        soporte.pendienteSoporte = !nuevoValor;
+        console.error('Error al cargar usuario', err);
       },
     });
   }
+
+  private cargarSoportes(): void {
+    this.sS.list().subscribe({
+      next: (data: Soporte[]) => {
+        this.soportes = data;
+        this.sS.setList(data);
+        this.ajustarPaginaActual();
+      },
+      error: (err) => {
+        console.error('Error al listar soportes', err);
+      },
+    });
+  }
+
+  get totalPages(): number {
+    return Math.max(Math.ceil(this.soportes.length / this.pageSize), 1);
+  }
+
+  get soportesPaginados(): Soporte[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.soportes.slice(start, start + this.pageSize);
+  }
+
+  private ajustarPaginaActual(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+  }
+
+  irPaginaAnterior(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  irPaginaSiguiente(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  onPendienteChange(soporte: Soporte, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const nuevoValor = input.checked;
+    const valorAnterior = soporte.pendienteSoporte;
+
+    soporte.pendienteSoporte = nuevoValor;
+
+    this.sS.update(soporte).subscribe({
+      next: () => {
+        console.log('Pendiente actualizado');
+      },
+      error: (err) => {
+        console.error('Error al actualizar pendiente', err);
+        soporte.pendienteSoporte = valorAnterior;
+      },
+    });
+  }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario?.trim() || 'Usuario';
+    return nombre
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase())
+      .join('');
+  }
 }
- */

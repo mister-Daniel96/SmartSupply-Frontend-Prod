@@ -1,159 +1,152 @@
-/* import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { Usuario } from '../../../models/usuario';
-import { MatPaginator } from '@angular/material/paginator';
-import { UsuarioService } from '../../../services/usuario.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import * as bcrypt from 'bcryptjs';
 
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Usuario } from '../../../models/usuario';
+import { UsuarioService } from '../../../services/usuario.service';
+import { LoginService } from '../../../services/login.service';
 import { UsuarioDialogComponent } from './usuario-dialog/usuario-dialog.component';
 
 @Component({
   selector: 'app-crea-edita-usuarios',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatDialogModule, // 👈 agrega esto
-  ],
+  imports: [CommonModule, UsuarioDialogComponent],
   templateUrl: './crea-edita-usuarios.component.html',
-  styleUrl: './crea-edita-usuarios.component.css',
+  styleUrls: ['./crea-edita-usuarios.component.css'],
 })
-export class CreaEditaUsuariosComponent implements OnInit, AfterViewInit {
-  dataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
-  displayedColumns: string[] = [
-    'codigo',
-    'nombre',
-    'correo',
-    'rol',
-    'contrasena',
-    'activado',
-    'accion01',
-  ];
-   usuario = new Usuario();
+export class CreaEditaUsuariosComponent implements OnInit {
+  private uS = inject(UsuarioService);
+  private loginService = inject(LoginService);
+
+  usuario = new Usuario();
   id = 0;
 
-  @ViewChild(MatPaginator) paginatorClient!: MatPaginator;
+  usuarios: Usuario[] = [];
+  mostrarDialogo = false;
+  usuarioDialogo: Usuario | null = null;
 
-  constructor(
-    private uS: UsuarioService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog
-  ) {}
+  currentPage = 1;
+  pageSize = 5;
 
   ngOnInit(): void {
-  this.route.parent?.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      this.id = Number(idParam);
-    });
+    this.id = Number(this.loginService.showId()) || 0;
+    console.log('ID token admin usuarios:', this.id);
 
-    this.uS.listId(this.id).subscribe((data) => {
-      this.usuario = data;
-    });
+    if (this.id > 0) {
+      this.cargarUsuario();
+    } else {
+      console.error('No se pudo obtener el id del usuario desde el token');
+    }
 
+    this.cargarUsuarios();
 
-    // 1) Carga inicial desde la API
-    this.uS.list().subscribe((data) => {
-      console.log('[list()] datos recibidos:', data);
-      this.dataSource.data = data;
-    });
-
-    // 2) Escucha de cambios reactivos (BehaviorSubject en el service)
     this.uS.getList().subscribe((data) => {
       console.log('[getList()] datos actualizados:', data);
-      this.dataSource.data = data;
+      this.usuarios = data;
+      this.ajustarPaginaActual();
     });
   }
 
-  ngAfterViewInit(): void {
-    // Aquí ya existe el ViewChild
-    this.dataSource.paginator = this.paginatorClient;
-  }
-
-  eliminar(id: number) {
-    console.log('[eliminar] id a eliminar:', id);
-
-    this.uS.delete(id).subscribe(() => {
-      console.log('[eliminar] delete OK, recargando lista...');
-      this.uS.list().subscribe((data) => {
-        console.log('[eliminar] lista después de eliminar:', data);
-        this.uS.setList(data); // esto disparará el getList() de arriba
-      });
-    });
-  }
-  abrirDialogoEditar(usuario: Usuario) {
-    // Guardamos una copia original, con el hash actual
-    const usuarioOriginal = { ...usuario };
-
-    const dialogRef = this.dialog.open(UsuarioDialogComponent, {
-      width: '500px',
-      data: {
-        ...usuario,
-        passwordUsuario: '', // 👉 el popup empieza con contraseña vacía
+  private cargarUsuario(): void {
+    this.uS.listId(this.id).subscribe({
+      next: (data: Usuario) => {
+        this.usuario = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario logueado', err);
       },
     });
+  }
 
-    dialogRef.afterClosed().subscribe((result: Usuario | undefined) => {
-      if (result) {
-        console.log('[Dialog] Usuario editado:', result);
-
-        // Armamos el usuario que enviaremos al backend
-        const usuarioActualizado: Usuario = {
-          ...usuarioOriginal, // mantiene idUsuario y password hash original
-          nameUsuario: result.nameUsuario,
-          emailUsuario: result.emailUsuario,
-          enabledUsuario: result.enabledUsuario,
-        };
-
-        // Si el admin escribió una nueva contraseña, la encriptamos
-        if (result.passwordUsuario && result.passwordUsuario.trim() !== '') {
-          usuarioActualizado.passwordUsuario = bcrypt.hashSync(
-            result.passwordUsuario.trim(),
-            12
-          );
-        }
-
-        this.uS.update(usuarioActualizado).subscribe(() => {
-          console.log('[update] Usuario actualizado, recargando lista...');
-          this.uS.list().subscribe((data) => {
-            this.uS.setList(data);
-          });
-        });
-      }
+  private cargarUsuarios(): void {
+    this.uS.list().subscribe({
+      next: (data: Usuario[]) => {
+        console.log('[list()] datos recibidos:', data);
+        this.usuarios = data;
+        this.uS.setList(data);
+        this.ajustarPaginaActual();
+      },
+      error: (err) => {
+        console.error('Error al listar usuarios', err);
+      },
     });
   }
- abrirDialogoNuevo() {
-  const nuevoUsuario: Usuario = {
-    idUsuario: null,
-    nameUsuario: '',
-    passwordUsuario: '',
-    emailUsuario: '',
-    enabledUsuario: true,
-    ageUsuario: 0,
-    dniUsuario: 0,
-    rolUsuario: 'CLIENTE',
-    phoneUsuario: '',
-  };
 
-  const dialogRef = this.dialog.open(UsuarioDialogComponent, {
-    width: '500px',
-    data: { ...nuevoUsuario },
-  });
+  get totalPages(): number {
+    return Math.max(Math.ceil(this.usuarios.length / this.pageSize), 1);
+  }
 
-  dialogRef.afterClosed().subscribe((result: Usuario | undefined) => {
-    if (result) {
-      console.log('[Dialog NUEVO] Usuario ingresado:', result);
+  get usuariosPaginados(): Usuario[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.usuarios.slice(start, start + this.pageSize);
+  }
 
-      // Armamos el usuario que vamos a enviar al backend
-      const usuarioNuevo: Usuario = {
-        ...nuevoUsuario,
+  private ajustarPaginaActual(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+  }
+
+  irPaginaAnterior(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  irPaginaSiguiente(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  abrirDialogoNuevo(): void {
+    this.usuarioDialogo = {
+      idUsuario: null,
+      nameUsuario: '',
+      passwordUsuario: '',
+      emailUsuario: '',
+      enabledUsuario: true,
+      ageUsuario: 0,
+      dniUsuario: 0,
+      rolUsuario: 'CLIENTE',
+      phoneUsuario: '',
+    };
+
+    this.mostrarDialogo = true;
+  }
+
+  abrirDialogoEditar(usuario: Usuario): void {
+    this.usuarioDialogo = {
+      ...usuario,
+      passwordUsuario: '',
+    };
+
+    this.mostrarDialogo = true;
+  }
+
+  cerrarDialogo(): void {
+    this.mostrarDialogo = false;
+    this.usuarioDialogo = null;
+  }
+
+  guardarUsuario(result: Usuario): void {
+    if (!this.usuarioDialogo) return;
+
+    const esEdicion = !!result.idUsuario;
+
+    if (esEdicion) {
+      const usuarioOriginal = this.usuarios.find(
+        (u) => u.idUsuario === result.idUsuario
+      );
+
+      if (!usuarioOriginal) return;
+
+      const usuarioActualizado: Usuario = {
+        ...usuarioOriginal,
         nameUsuario: result.nameUsuario,
         emailUsuario: result.emailUsuario,
         enabledUsuario: result.enabledUsuario,
@@ -163,29 +156,72 @@ export class CreaEditaUsuariosComponent implements OnInit, AfterViewInit {
         phoneUsuario: result.phoneUsuario,
       };
 
-      // Encriptar la contraseña antes de enviar
       if (result.passwordUsuario && result.passwordUsuario.trim() !== '') {
-        usuarioNuevo.passwordUsuario = bcrypt.hashSync(
+        usuarioActualizado.passwordUsuario = bcrypt.hashSync(
           result.passwordUsuario.trim(),
           12
         );
-      } else {
-        // Si por alguna razón viniera vacío, no tiene sentido crear el usuario
-        console.warn(
-          '[Dialog NUEVO] Contraseña vacía, no se creará el usuario.'
-        );
+      }
+
+      this.uS.update(usuarioActualizado).subscribe({
+        next: () => {
+          this.uS.list().subscribe((data) => {
+            this.uS.setList(data);
+            this.cerrarDialogo();
+          });
+        },
+        error: (err) => {
+          console.error('Error al actualizar usuario', err);
+        },
+      });
+    } else {
+      if (!result.passwordUsuario || result.passwordUsuario.trim() === '') {
+        console.warn('Contraseña vacía, no se creará el usuario.');
         return;
       }
 
-      this.uS.insert(usuarioNuevo).subscribe(() => {
-        console.log('[insert] Usuario creado, recargando lista...');
-        this.uS.list().subscribe((data) => {
-          this.uS.setList(data); // ✅ actualizas la tabla
-        });
+      const usuarioNuevo: Usuario = {
+        ...result,
+        idUsuario: null,
+        passwordUsuario: bcrypt.hashSync(result.passwordUsuario.trim(), 12),
+      };
+
+      this.uS.insert(usuarioNuevo).subscribe({
+        next: () => {
+          this.uS.list().subscribe((data) => {
+            this.uS.setList(data);
+            this.cerrarDialogo();
+          });
+        },
+        error: (err) => {
+          console.error('Error al crear usuario', err);
+        },
       });
     }
-  });
-}
+  }
 
+  eliminar(id: number | null): void {
+    if (id == null) return;
+
+    this.uS.delete(id).subscribe({
+      next: () => {
+        this.uS.list().subscribe((data) => {
+          this.uS.setList(data);
+        });
+      },
+      error: (err) => {
+        console.error('Error al eliminar usuario', err);
+      },
+    });
+  }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario?.trim() || 'Usuario';
+    return nombre
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase())
+      .join('');
+  }
 }
- */

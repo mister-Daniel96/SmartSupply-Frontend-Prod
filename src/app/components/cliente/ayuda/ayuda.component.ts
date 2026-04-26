@@ -1,58 +1,87 @@
-/* import { Component, OnInit } from '@angular/core';
-import { ChangeDetectionStrategy, signal } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDivider } from '@angular/material/divider';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { Faq } from '../../../models/faq';
-import { FaqService } from '../../../services/faq.service';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Usuario } from '../../../models/usuario';
+import { FaqService } from '../../../services/faq.service';
 import { UsuarioService } from '../../../services/usuario.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-ayuda',
   standalone: true,
-  imports: [
-    MatExpansionModule,
-    MatDivider,
-    //,CommonModule   -->  este se usa para la version antigua
-  ],
+  imports: [CommonModule],
   templateUrl: './ayuda.component.html',
-  styleUrl: './ayuda.component.css',
+  styleUrls: ['./ayuda.component.css'],
 })
 export class AyudaComponent implements OnInit {
-  readonly panelOpenState = signal(false);
   usuario = new Usuario();
   id = 0;
   faqs: Faq[] = [];
+  faqAbierto: number | null = null;
+
   constructor(
     private fS: FaqService,
-    private FormBuilder: FormBuilder,
     private uS: UsuarioService,
-
-    public route: ActivatedRoute,
-    private router: Router
+    private loginService: LoginService
   ) {}
+
   ngOnInit(): void {
-    this.route.parent?.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      this.id = Number(idParam);
-    });
-    this.fS.list().subscribe((data) => {
-      this.faqs = data;
-    });
-    this.uS.listId(this.id).subscribe((data) => {
-      this.usuario = data;
+    this.id = Number(this.loginService.showId()) || 0;
+
+    this.cargarFaqs();
+
+    if (this.id > 0) {
+      this.cargarUsuario();
+    }
+  }
+
+  cargarFaqs(): void {
+    this.fS.list().subscribe({
+      next: (data) => {
+        this.faqs = data ?? [];
+      },
+      error: (err) => {
+        console.error('Error al cargar FAQs', err);
+        this.faqs = [];
+      },
     });
   }
-  descargarGuia() {
+
+  cargarUsuario(): void {
+    this.uS.listId(this.id).subscribe({
+      next: (data) => {
+        this.usuario = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario', err);
+      },
+    });
+  }
+
+  toggleFaq(index: number): void {
+    this.faqAbierto = this.faqAbierto === index ? null : index;
+  }
+
+  descargarGuia(): void {
     const link = document.createElement('a');
-    link.href = '/manuales/MANUAL_DE_USO.pdf'; 
+    link.href = '/manuales/MANUAL_DE_USO.pdf';
     link.download = 'MANUAL_DE_USO.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario || '';
+
+    return (
+      nombre
+        .split(' ')
+        .filter((x: string) => x.trim().length > 0)
+        .map((x: string) => x.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('') || 'U'
+    );
+  }
 }
- */

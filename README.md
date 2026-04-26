@@ -33,3 +33,6 @@ Version de angular
 npm install @auth0/angular-jwt
 npm install tailwindcss @tailwindcss/postcss postcss
 npm install sweetalert2
+npm install bcryptjs
+ng add ng2-charts
+npm install xlsx   -------ára excel

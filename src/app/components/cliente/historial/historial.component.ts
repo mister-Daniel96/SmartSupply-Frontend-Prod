@@ -1,41 +1,55 @@
-/* import { Component, OnInit } from '@angular/core';
-import { UsuarioService } from '../../../services/usuario.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PrediccionesService } from '../../../services/ConsultaPrediccionDemanda.service';
-import { ConsultaPrediccionDemanda } from '../../../models/ConsultaPrediccionDemanda';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+
+import { UsuarioService } from '../../../services/usuario.service';
+import { PrediccionesService } from '../../../services/ConsultaPrediccionDemanda.service';
+import { LoginService } from '../../../services/login.service';
+
+import { ConsultaPrediccionDemanda } from '../../../models/ConsultaPrediccionDemanda';
 import { Usuario } from '../../../models/usuario';
 
 @Component({
   selector: 'app-historial',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule],
   templateUrl: './historial.component.html',
-  styleUrl: './historial.component.css',
+  styleUrls: ['./historial.component.css'],
+  providers: [DatePipe],
 })
 export class HistorialComponent implements OnInit {
+  private uS = inject(UsuarioService);
+  private pS = inject(PrediccionesService);
+  private loginService = inject(LoginService);
+
   consultas: ConsultaPrediccionDemanda[] = [];
   id = 0;
-  usuario = new Usuario();
-  constructor(
-    private uS: UsuarioService,
-    public route: ActivatedRoute,
-    private router: Router,
-    private pS: PrediccionesService
-  ) {}
+  usuario: Usuario = new Usuario();
+
   ngOnInit(): void {
-    this.route.parent?.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      this.id = Number(idParam);
-    });
-    this.uS.listId(this.id).subscribe((data) => {
-      this.usuario = data;
-    });
-    this.listarConsultas();
-    console.log(this.consultas);
+    this.id = Number(this.loginService.showId()) || 0;
+    console.log('ID token historial:', this.id);
+
+    if (this.id > 0) {
+      this.cargarUsuario();
+      this.listarConsultas();
+    } else {
+      console.error('No se pudo obtener el id del usuario desde el token');
+    }
   }
 
-  listarConsultas(): void {
+  private cargarUsuario(): void {
+    this.uS.listId(this.id).subscribe({
+      next: (data: Usuario) => {
+        console.log('Usuario historial:', data);
+        this.usuario = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario', err);
+      },
+    });
+  }
+
+  private listarConsultas(): void {
     this.pS.list().subscribe({
       next: (data: ConsultaPrediccionDemanda[]) => {
         console.log('Consultas recibidas:', data);
@@ -47,4 +61,3 @@ export class HistorialComponent implements OnInit {
     });
   }
 }
- */

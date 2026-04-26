@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
         } else if (role === 'ADMINISTRADOR') {
                     console.log("entro admin");
 
-          this.router.navigate(['/administrador/usuarios']);
+          this.router.navigate(['/administrador']);
         } else {
           this.mensaje = 'Rol no reconocido';
         }
