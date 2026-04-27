@@ -190,8 +190,7 @@ export class PrediccionComponent implements OnInit, OnDestroy {
         this.pS.setList(resp);
 
         this.isCargando = false;
-        setTimeout(() => this.renderizarGrafico(), 0);
-      },
+setTimeout(() => this.renderizarGrafico(), 100);      },
       error: (err) => {
         console.error('Error al obtener predicción', err);
         this.isCargando = false;
