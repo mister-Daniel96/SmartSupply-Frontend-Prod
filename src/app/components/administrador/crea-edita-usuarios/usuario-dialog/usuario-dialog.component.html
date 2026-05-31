@@ -1,5 +1,7 @@
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
-  <div class="w-full max-w-2xl rounded-3xl bg-white shadow-2xl">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4 py-6">
+  <div class="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+    
+    <!-- Header -->
     <div class="border-b border-slate-200 px-6 py-5">
       <div class="flex items-start justify-between gap-4">
         <div>
@@ -21,10 +23,36 @@
       </div>
     </div>
 
-    <div class="px-6 py-5">
+    <!-- Body -->
+    <div class="flex-1 overflow-y-auto px-6 py-5">
+      
+      <!-- Errores -->
+      <div
+        *ngIf="errores.length > 0"
+        class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700"
+      >
+        <div class="mb-2 flex items-center gap-2 font-bold">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-red-600">
+            !
+          </span>
+          <span>Corrige los siguientes campos</span>
+        </div>
+
+        <ul class="grid gap-1">
+          <li *ngFor="let error of errores" class="flex gap-2">
+            <span>•</span>
+            <span>{{ error }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Formulario -->
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        
         <div *ngIf="data.idUsuario">
-          <label class="mb-2 block text-sm font-semibold text-slate-700">ID</label>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            ID
+          </label>
           <input
             [ngModel]="data.idUsuario"
             name="idUsuario"
@@ -41,7 +69,9 @@
             [(ngModel)]="data.nameUsuario"
             name="nameUsuario"
             type="text"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            maxlength="80"
+            placeholder="Ej. Juan Ayala"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
@@ -53,7 +83,9 @@
             [(ngModel)]="data.emailUsuario"
             name="emailUsuario"
             type="email"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            maxlength="100"
+            placeholder="Ej. usuario@correo.com"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
@@ -65,48 +97,68 @@
             [(ngModel)]="data.passwordUsuario"
             name="passwordUsuario"
             type="password"
+            maxlength="50"
             [placeholder]="data.idUsuario ? 'Solo si deseas cambiarla' : 'Ingresa una contraseña'"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
+          <p class="mt-1 text-[11px] leading-4 text-slate-500">
+            Mín. 8 caracteres, mayúscula, minúscula, número y carácter especial.
+          </p>
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-semibold text-slate-700">Edad</label>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Edad
+          </label>
           <input
             [(ngModel)]="data.ageUsuario"
             name="ageUsuario"
             type="number"
-            min="0"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            min="18"
+            max="100"
+            placeholder="Ej. 25"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-semibold text-slate-700">DNI</label>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            DNI
+          </label>
           <input
             [(ngModel)]="data.dniUsuario"
             name="dniUsuario"
-            type="number"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            type="text"
+            inputmode="numeric"
+            maxlength="8"
+            placeholder="Ej. 12345678"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-semibold text-slate-700">Teléfono</label>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Teléfono
+          </label>
           <input
             [(ngModel)]="data.phoneUsuario"
             name="phoneUsuario"
-            type="tel"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            type="text"
+            inputmode="numeric"
+            maxlength="9"
+            placeholder="Ej. 987654321"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
         <div>
-          <label class="mb-2 block text-sm font-semibold text-slate-700">Rol</label>
+          <label class="mb-2 block text-sm font-semibold text-slate-700">
+            Rol
+          </label>
           <select
             [(ngModel)]="data.rolUsuario"
             name="rolUsuario"
-            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+            class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           >
             <option value="ADMIN">Administrador</option>
             <option value="CLIENTE">Cliente</option>
@@ -115,7 +167,8 @@
         </div>
       </div>
 
-      <div class="mt-4">
+      <!-- Estado -->
+      <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
         <label class="inline-flex items-center gap-3 text-sm font-medium text-slate-700">
           <input
             type="checkbox"
@@ -126,12 +179,15 @@
           Usuario activado
         </label>
       </div>
+    </div>
 
-      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+    <!-- Footer -->
+    <div class="border-t border-slate-200 bg-slate-50 px-6 py-4">
+      <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
         <button
           type="button"
           (click)="cancelar()"
-          class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
         >
           Cancelar
         </button>

@@ -25,6 +25,10 @@ export class HistorialComponent implements OnInit {
   id = 0;
   usuario: Usuario = new Usuario();
 
+  // Paginador
+  paginaActual: number = 1;
+  registrosPorPagina: number = 10;
+
   ngOnInit(): void {
     this.id = Number(this.loginService.showId()) || 0;
     console.log('ID token historial:', this.id);
@@ -53,11 +57,45 @@ export class HistorialComponent implements OnInit {
     this.pS.list().subscribe({
       next: (data: ConsultaPrediccionDemanda[]) => {
         console.log('Consultas recibidas:', data);
-        this.consultas = data;
+
+        this.consultas = data ?? [];
+
+        // Cada vez que se cargan datos, volvemos a la primera página
+        this.paginaActual = 1;
       },
       error: (err) => {
         console.error('Error al listar consultas', err);
+        this.consultas = [];
       },
     });
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.consultas.length / this.registrosPorPagina) || 1;
+  }
+
+  get indiceInicial(): number {
+    return (this.paginaActual - 1) * this.registrosPorPagina;
+  }
+
+  get indiceFinal(): number {
+    const final = this.indiceInicial + this.registrosPorPagina;
+    return final > this.consultas.length ? this.consultas.length : final;
+  }
+
+  get consultasPaginadas(): ConsultaPrediccionDemanda[] {
+    return this.consultas.slice(this.indiceInicial, this.indiceFinal);
+  }
+
+  paginaAnterior(): void {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
+  }
+
+  paginaSiguiente(): void {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
   }
 }

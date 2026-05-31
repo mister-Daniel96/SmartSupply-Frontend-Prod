@@ -70,37 +70,87 @@
                   >
                     Fecha fin
                   </th>
-                  <th
+                  <!-- <th
                     class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500"
                   >
                     Creado el
-                  </th>
+                  </th> -->
                 </tr>
               </thead>
 
               <tbody class="divide-y divide-slate-100 bg-white">
                 <tr
-                  *ngFor="let c of consultas; let i = index"
+                  *ngFor="let c of consultasPaginadas; let i = index"
                   class="transition hover:bg-slate-50"
                 >
                   <td class="px-4 py-3 text-sm text-slate-700">
-                    {{ i + 1 }}
+                    {{ indiceInicial + i + 1 }}
                   </td>
+
                   <td class="px-4 py-3 text-sm font-medium text-slate-800">
                     {{ c.articulo.nombreArticulo }}
                   </td>
+
                   <td class="px-4 py-3 text-sm text-slate-700">
                     {{ c.fechaInicio }}
                   </td>
+
                   <td class="px-4 py-3 text-sm text-slate-700">
                     {{ c.fechaFin }}
                   </td>
+
                   <td class="px-4 py-3 text-sm text-slate-700">
                     {{ c.createdAt | date:'dd/MM/yyyy' }}
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <div
+          class="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 md:flex-row md:items-center md:justify-between"
+        >
+          <p class="text-sm text-slate-500">
+            Mostrando
+            <span class="font-semibold text-slate-700">
+              {{ indiceInicial + 1 }}
+            </span>
+            -
+            <span class="font-semibold text-slate-700">
+              {{ indiceFinal }}
+            </span>
+            de
+            <span class="font-semibold text-slate-700">
+              {{ consultas.length }}
+            </span>
+            registros
+          </p>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="paginaActual === 1"
+              (click)="paginaAnterior()"
+            >
+              Anterior
+            </button>
+
+            <span
+              class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700"
+            >
+              Página {{ paginaActual }} de {{ totalPaginas }}
+            </span>
+
+            <button
+              type="button"
+              class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="paginaActual === totalPaginas"
+              (click)="paginaSiguiente()"
+            >
+              Siguiente
+            </button>
           </div>
         </div>
       </ng-container>
@@ -114,9 +164,11 @@
           >
             <span class="text-xl">🕘</span>
           </div>
+
           <h3 class="text-lg font-semibold text-slate-800">
             No hay consultas registradas
           </h3>
+
           <p class="mt-2 max-w-md text-sm text-slate-500">
             Aún no se han registrado consultas de predicción.
           </p>
