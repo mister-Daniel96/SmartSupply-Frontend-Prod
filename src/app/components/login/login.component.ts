@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
@@ -10,7 +11,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { JwtRequest } from '../../models/jwtRequest';
 
@@ -30,7 +31,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -38,16 +41,27 @@ export class LoginComponent implements OnInit {
       nameUsuario: ['', Validators.required],
       passwordUsuario: ['', Validators.required],
     });
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['authRequired']) {
+        this.mensaje = 'Debe autenticarse para acceder.';
+        this.cdr.markForCheck();
+      }
+    });
   }
 
-  clickEvent(event: Event) {
+  clickEvent(event: Event): void {
     event.preventDefault();
     this.hide = !this.hide;
+    this.cdr.markForCheck();
   }
 
-  login() {
+  login(): void {
+    this.mensaje = '';
+
     if (this.form.invalid) {
       this.mensaje = 'Completa los campos obligatorios';
+      this.cdr.markForCheck();
       return;
     }
 
@@ -66,18 +80,19 @@ export class LoginComponent implements OnInit {
         console.log('Id:', id);
 
         if (role === 'CLIENTE') {
-          console.log("entro cliente");
+          console.log('entro cliente');
           this.router.navigate(['/cliente']);
         } else if (role === 'ADMINISTRADOR') {
-                    console.log("entro admin");
-
+          console.log('entro admin');
           this.router.navigate(['/administrador']);
         } else {
           this.mensaje = 'Rol no reconocido';
+          this.cdr.markForCheck();
         }
       },
       error: () => {
         this.mensaje = 'Credenciales incorrectas';
+        this.cdr.markForCheck();
       },
     });
   }
