@@ -12,7 +12,7 @@ export class SessionSecurityService {
   private isWatching = false;
 
   // Para pruebas: 20 segundos
-  private readonly inactivityTime = 200 * 1000;
+  private readonly inactivityTime = 10 * 1000;
 
   // Para producción usa 10 minutos:
   // private readonly inactivityTime = 10 * 60 * 1000;
