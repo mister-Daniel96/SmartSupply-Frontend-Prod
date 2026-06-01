@@ -12,7 +12,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { LoginService } from '../../services/login.service';
+import { SessionSecurityService } from '../../services/session-security.service';
 import { JwtRequest } from '../../models/jwtRequest';
 
 @Component({
@@ -33,7 +35,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sessionSecurityService: SessionSecurityService
   ) {}
 
   ngOnInit(): void {
@@ -45,8 +48,19 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (params['authRequired']) {
         this.mensaje = 'Debe autenticarse para acceder.';
-        this.cdr.markForCheck();
       }
+
+      if (params['sessionExpired']) {
+        this.mensaje =
+          'Su sesión ha expirado por inactividad. Inicie sesión nuevamente.';
+      }
+
+      if (params['connectionLost']) {
+        this.mensaje =
+          'Se perdió la conexión a internet. Por seguridad, debe iniciar sesión nuevamente.';
+      }
+
+      this.cdr.markForCheck();
     });
   }
 
@@ -72,6 +86,9 @@ export class LoginComponent implements OnInit {
     this.loginService.login(request).subscribe({
       next: (data: any) => {
         sessionStorage.setItem('token', data.jwttoken);
+
+        // Inicia seguridad de sesión: inactividad + pérdida de conexión
+        this.sessionSecurityService.start();
 
         const role = this.loginService.showRole();
         const id = this.loginService.showId();
