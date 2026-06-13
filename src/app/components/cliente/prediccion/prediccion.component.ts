@@ -27,7 +27,10 @@ import { PrediccionesService } from '../../../services/ConsultaPrediccionDemanda
 import { LoginService } from '../../../services/login.service';
 
 import { Articulo } from '../../../models/articulo';
-import { PredictionResponse, PrediccionDia } from '../../../models/predictionResponse';
+import {
+  PredictionResponse,
+  PrediccionDia,
+} from '../../../models/predictionResponse';
 import { ConsultaPrediccionDemanda } from '../../../models/ConsultaPrediccionDemanda';
 import { Usuario } from '../../../models/usuario';
 
@@ -39,7 +42,7 @@ Chart.register(
   CategoryScale,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 @Component({
@@ -81,7 +84,7 @@ export class PrediccionComponent implements OnInit, OnDestroy {
         fechaFin: ['', Validators.required],
         nombreArticulo: ['', Validators.required],
       },
-      { validators: this.dateRangeValidator }
+      { validators: this.dateRangeValidator },
     );
 
     this.limiteInicio.setDate(this.today.getDate() + 1);
@@ -152,11 +155,11 @@ export class PrediccionComponent implements OnInit, OnDestroy {
   }
 
   toISODate(d: Date | string): string {
-  const date = new Date(d);
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
-  return `${date.getFullYear()}-${month}-${day}`;
-}
+    const date = new Date(d);
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+  }
 
   generarPrediccion(): void {
     if (this.form.invalid) {
@@ -167,7 +170,7 @@ export class PrediccionComponent implements OnInit, OnDestroy {
     const { fechaInicio, fechaFin, nombreArticulo } = this.form.value;
 
     const artOpcion = this.listaArticulos.find(
-      (p) => p.value === Number(nombreArticulo)
+      (p) => p.value === Number(nombreArticulo),
     );
 
     const articulo = new Articulo();
@@ -190,7 +193,8 @@ export class PrediccionComponent implements OnInit, OnDestroy {
         this.pS.setList(resp);
 
         this.isCargando = false;
-setTimeout(() => this.renderizarGrafico(), 100);      },
+        setTimeout(() => this.renderizarGrafico(), 100);
+      },
       error: (err) => {
         console.error('Error al obtener predicción', err);
         this.isCargando = false;
@@ -201,7 +205,9 @@ setTimeout(() => this.renderizarGrafico(), 100);      },
   private renderizarGrafico(): void {
     if (!this.predicciones.length) return;
 
-    const canvas = document.getElementById(this.chartId) as HTMLCanvasElement | null;
+    const canvas = document.getElementById(
+      this.chartId,
+    ) as HTMLCanvasElement | null;
     if (!canvas) return;
 
     this.destruirGrafico();
@@ -210,10 +216,12 @@ setTimeout(() => this.renderizarGrafico(), 100);      },
       new Date(p.fecha).toLocaleDateString('es-PE', {
         day: '2-digit',
         month: 'short',
-      })
+      }),
     );
 
-    const data = this.predicciones.map((p) => Number(p.demanda_pronosticada) || 0);
+    const data = this.predicciones.map(
+      (p) => Number(p.demanda_pronosticada) || 0,
+    );
     const max = Math.max(...data, 0);
     const maxY = Math.max(Math.ceil(max * 1.2), 1);
 
@@ -299,7 +307,9 @@ setTimeout(() => this.renderizarGrafico(), 100);      },
 
     const filas = this.predicciones.map((p) => {
       const fecha = this.datePipe.transform(p.fecha, 'dd/MM/yyyy') ?? '';
-      const tipo = (p.tipo_articulo_nombre ?? '').toString().replace(/"/g, '""');
+      const tipo = (p.tipo_articulo_nombre ?? '')
+        .toString()
+        .replace(/"/g, '""');
       const demanda =
         p.demanda_pronosticada?.toString().replace(/"/g, '""') ?? '';
 
@@ -318,5 +328,18 @@ setTimeout(() => this.renderizarGrafico(), 100);      },
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario || '';
+
+    return (
+      nombre
+        .split(' ')
+        .filter((x: string) => x.trim().length > 0)
+        .map((x: string) => x.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('') || 'U'
+    );
   }
 }

@@ -3,8 +3,7 @@
     <header class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
       <div>
         <span
-          class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
-        >
+          class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
           Historial
         </span>
 
@@ -17,19 +16,18 @@
         </p>
       </div>
 
-      <div
-        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
-      >
-        <img
-          alt="Avatar de usuario"
-          class="h-12 w-12 rounded-full object-cover ring-2 ring-slate-100"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK"
-        />
-        <div class="min-w-0">
-          <p class="text-xs font-medium text-slate-400">Bienvenido</p>
-          <p class="truncate text-sm font-semibold text-slate-800">
+
+      <div class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 font-bold text-white">
+          {{ getIniciales() }}
+        </div>
+
+        <div class="flex min-w-0 flex-col">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
             {{ usuario.nameUsuario || 'Usuario' }}
-          </p>
+          </span>
         </div>
       </div>
     </header>
@@ -50,24 +48,16 @@
             <table class="min-w-full divide-y divide-slate-200">
               <thead class="bg-slate-50">
                 <tr>
-                  <th
-                    class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500"
-                  >
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
                     #
                   </th>
-                  <th
-                    class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500"
-                  >
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
                     Artículo
                   </th>
-                  <th
-                    class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500"
-                  >
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
                     Fecha inicio
                   </th>
-                  <th
-                    class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500"
-                  >
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
                     Fecha fin
                   </th>
                   <!-- <th
@@ -79,10 +69,7 @@
               </thead>
 
               <tbody class="divide-y divide-slate-100 bg-white">
-                <tr
-                  *ngFor="let c of consultasPaginadas; let i = index"
-                  class="transition hover:bg-slate-50"
-                >
+                <tr *ngFor="let c of consultasPaginadas; let i = index" class="transition hover:bg-slate-50">
                   <td class="px-4 py-3 text-sm text-slate-700">
                     {{ indiceInicial + i + 1 }}
                   </td>
@@ -109,8 +96,7 @@
         </div>
 
         <div
-          class="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 md:flex-row md:items-center md:justify-between"
-        >
+          class="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 md:flex-row md:items-center md:justify-between">
           <p class="text-sm text-slate-500">
             Mostrando
             <span class="font-semibold text-slate-700">
@@ -128,27 +114,19 @@
           </p>
 
           <div class="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
+            <button type="button"
               class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-              [disabled]="paginaActual === 1"
-              (click)="paginaAnterior()"
-            >
+              [disabled]="paginaActual === 1" (click)="paginaAnterior()">
               Anterior
             </button>
 
-            <span
-              class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700"
-            >
+            <span class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
               Página {{ paginaActual }} de {{ totalPaginas }}
             </span>
 
-            <button
-              type="button"
+            <button type="button"
               class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-              [disabled]="paginaActual === totalPaginas"
-              (click)="paginaSiguiente()"
-            >
+              [disabled]="paginaActual === totalPaginas" (click)="paginaSiguiente()">
               Siguiente
             </button>
           </div>
@@ -157,11 +135,8 @@
 
       <ng-template #sinConsultas>
         <div
-          class="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center"
-        >
-          <div
-            class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-slate-500"
-          >
+          class="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center">
+          <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-slate-500">
             <span class="text-xl">🕘</span>
           </div>
 
