@@ -17,19 +17,17 @@
         </p>
       </div>
 
-      <div
-        class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
-      >
-        <img
-          alt="Avatar de usuario"
-          class="h-12 w-12 rounded-full object-cover ring-2 ring-slate-100"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzzksBMnwiR7l4TxaU5wQcbDNJUucmILoxjBVtzLNjJ04UtzAgDFe3KcfbNI_KkZC-wG8RJIk0pel4aCZXTxZmNb8xuZzfqLwaBV8Iqe8vaZmaudCtls8bV3tm8dN807m562cZkcfHxGnF65ctqx9Fw4Ad8puybFzt0sH2bwkAoY8p6dIspcMlSiXJEtqCS4rNGnlZjHT8LVg-Ji_HcaiNbxCO_mwvCzy4kpfAW4r-7ARV74G-lydSgt4mxXZTGKIRtMfVZoP-eHMK"
-        />
-        <div class="min-w-0">
-          <p class="text-xs font-medium text-slate-400">Bienvenido</p>
-          <p class="truncate text-sm font-semibold text-slate-800">
+     <div class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 font-bold text-white">
+          {{ getIniciales() }}
+        </div>
+
+        <div class="flex min-w-0 flex-col">
+          <span class="text-xs text-slate-500">Usuario</span>
+          <span class="truncate font-semibold text-slate-800">
             {{ usuario.nameUsuario || 'Usuario' }}
-          </p>
+          </span>
         </div>
       </div>
     </header>

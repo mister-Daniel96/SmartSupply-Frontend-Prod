@@ -98,4 +98,17 @@ export class HistorialComponent implements OnInit {
       this.paginaActual++;
     }
   }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario || '';
+
+    return (
+      nombre
+        .split(' ')
+        .filter((x: string) => x.trim().length > 0)
+        .map((x: string) => x.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('') || 'U'
+    );
+  }
 }

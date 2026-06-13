@@ -42,7 +42,7 @@ Chart.register(
   CategoryScale,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface GraficoArticulo {
@@ -63,9 +63,7 @@ interface GraficoArticulo {
   styleUrls: ['./inicio.component.css'],
   providers: [DatePipe],
 })
-export class InicioComponent
-  implements OnInit, OnDestroy, AfterViewChecked
-{
+export class InicioComponent implements OnInit, OnDestroy, AfterViewChecked {
   private articuloService = inject(ArticuloService);
   private prediccionesService = inject(PrediccionesService);
   private usuarioService = inject(UsuarioService);
@@ -122,7 +120,7 @@ export class InicioComponent
   private cargarPredicciones(
     articulos: Articulo[],
     inicio: Date,
-    fin: Date
+    fin: Date,
   ): void {
     const fechaInicioISO = this.toISODate(inicio);
     const fechaFinISO = this.toISODate(fin);
@@ -139,9 +137,9 @@ export class InicioComponent
       consulta.fechaInicio = fechaInicioISO;
       consulta.fechaFin = fechaFinISO;
 
-      return this.prediccionesService.insert(consulta).pipe(
-        catchError(() => of(null))
-      );
+      return this.prediccionesService
+        .insert(consulta)
+        .pipe(catchError(() => of(null)));
     });
 
     forkJoin(requests).subscribe((responses) => {
@@ -154,7 +152,7 @@ export class InicioComponent
         if (!preds.length) return;
 
         this.graficosDashboard.push(
-          this.crearGraficoDesdePredicciones(art, preds, index)
+          this.crearGraficoDesdePredicciones(art, preds, index),
         );
       });
 
@@ -186,7 +184,7 @@ export class InicioComponent
   private crearGraficoDesdePredicciones(
     articulo: Articulo,
     predicciones: PrediccionDia[],
-    index: number
+    index: number,
   ): GraficoArticulo {
     const palette = [
       { border: '#2563EB', background: 'rgba(37, 99, 235, 0.16)' },
@@ -200,7 +198,7 @@ export class InicioComponent
       new Date(p.fecha).toLocaleDateString('es-PE', {
         day: '2-digit',
         month: 'short',
-      })
+      }),
     );
 
     const values = predicciones.map((p) => Number(p.demanda_pronosticada) || 0);
@@ -220,9 +218,7 @@ export class InicioComponent
     this.destruirGraficos();
 
     this.graficosDashboard.forEach((graf) => {
-      const canvas = document.getElementById(
-        graf.chartId
-      ) as HTMLCanvasElement;
+      const canvas = document.getElementById(graf.chartId) as HTMLCanvasElement;
 
       if (!canvas) return;
 
@@ -249,5 +245,18 @@ export class InicioComponent
   private destruirGraficos(): void {
     this.charts.forEach((c) => c.destroy());
     this.charts = [];
+  }
+
+  getIniciales(): string {
+    const nombre = this.usuario?.nameUsuario || '';
+
+    return (
+      nombre
+        .split(' ')
+        .filter((x: string) => x.trim().length > 0)
+        .map((x: string) => x.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('') || 'U'
+    );
   }
 }
